@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 const ReviewSchema = new mongoose.Schema({
   bookingId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -20,3 +21,8 @@ const ReviewSchema = new mongoose.Schema({
 
   createdAt: { type: Date, default: Date.now }
 });
+
+ReviewSchema.index({ bookingId: 1 }, { unique: true });
+
+
+export default mongoose.model("Review", ReviewSchema);

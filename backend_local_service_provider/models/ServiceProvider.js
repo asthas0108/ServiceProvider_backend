@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 const ServiceProviderProfileSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -14,6 +15,11 @@ const ServiceProviderProfileSchema = new mongoose.Schema({
     ref: "ServiceCategory"
   }],
 
+  availability: [{
+    day: String, // Monday
+    startTime: String,
+    endTime: String
+  }],
   experienceYears: { type: Number, default: 0 },
 
   skills: [String],
@@ -32,5 +38,7 @@ const ServiceProviderProfileSchema = new mongoose.Schema({
   recommendationScore: { type: Number, default: 0 }, // ML-friendly
   qualityScore: { type: Number, default: 0 }, // ML output
 
+
   createdAt: { type: Date, default: Date.now }
 });
+export default mongoose.model("ServiceProviderProfile", ServiceProviderProfileSchema);

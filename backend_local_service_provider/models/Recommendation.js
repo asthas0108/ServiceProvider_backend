@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 const RecommendationSchema = new mongoose.Schema({
   providerId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -13,3 +14,4 @@ const RecommendationSchema = new mongoose.Schema({
 
   createdAt: { type: Date, default: Date.now }
 });
+export default mongoose.model("Recommendation", RecommendationSchema);

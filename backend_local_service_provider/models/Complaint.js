@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 const ComplaintSchema = new mongoose.Schema({
   bookingId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -26,3 +27,5 @@ const ComplaintSchema = new mongoose.Schema({
 
   createdAt: { type: Date, default: Date.now }
 });
+
+export default mongoose.model("Complaint", ComplaintSchema);
