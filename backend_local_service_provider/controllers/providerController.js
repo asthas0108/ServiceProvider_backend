@@ -10,6 +10,38 @@ export const createProviderProfile = async (req, res) => {
   }
 };
 
+/* GET PROVIDER PROFILE BY USER ID */
+export const getProviderById = async (req, res) => {
+  try {
+    const provider = await ServiceProviderProfile
+      .findById(req.params.id)
+      .populate("userId")
+      .populate("servicesOffered");
+
+    if (!provider) {
+      return res.status(404).json({ message: "Provider not found" });
+    }
+
+    res.json(provider);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/* GET ALL PROVIDERS */
+export const getAllProviders = async (req, res) => {
+  try {
+    const providers = await ServiceProviderProfile
+      .find()
+      .populate("userId")
+      .populate("servicesOffered");
+
+    res.json(providers);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 /* GET NEARBY PROVIDERS */
 export const getNearbyProviders = async (req, res) => {
   try {
@@ -29,6 +61,84 @@ export const getNearbyProviders = async (req, res) => {
     }).populate("userId");
 
     res.json(providers);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/* UPDATE PROVIDER PROFILE */
+export const updateProviderProfile = async (req, res) => {
+  try {
+    const updated = await ServiceProviderProfile.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "Provider not found" });
+    }
+
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/* DELETE PROVIDER PROFILE */
+export const deleteProviderProfile = async (req, res) => {
+  try {
+    const deleted = await ServiceProviderProfile.findByIdAndDelete(req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Provider not found" });
+    }
+
+    res.json({ message: "Provider deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/* VERIFY PROVIDER PROFILE (ADMIN ONLY) */
+export const verifyProvider = async (req, res) => {
+  try {
+    const provider = await ServiceProviderProfile.findById(req.params.id);
+
+    if (!provider) {
+      return res.status(404).json({ message: "Provider not found" });
+    }
+
+    provider.isVerified = true;
+    provider.verifiedByAdmin = true;
+
+    await provider.save();
+
+    res.json({ message: "Provider verified successfully", provider });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/* UPDATE PROVIDER RATING */
+export const updateProviderRating = async (req, res) => {
+  try {
+    const { rating } = req.body;
+
+    const provider = await ServiceProviderProfile.findById(req.params.id);
+
+    if (!provider) {
+      return res.status(404).json({ message: "Provider not found" });
+    }
+
+    const totalRating = provider.avgRating * provider.totalRatings;
+
+    provider.totalRatings += 1;
+    provider.avgRating = (totalRating + rating) / provider.totalRatings;
+
+    await provider.save();
+
+    res.json(provider);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
