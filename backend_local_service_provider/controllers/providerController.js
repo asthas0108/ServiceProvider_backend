@@ -58,7 +58,7 @@ export const getNearbyProviders = async (req, res) => {
           $maxDistance: 10000 // 10 km
         }
       }
-    }).populate("userId");
+    }).populate("userId","-password");
 
     res.json(providers);
   } catch (err) {

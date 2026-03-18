@@ -26,7 +26,7 @@ const ServiceProviderProfileSchema = new mongoose.Schema({
 
   location: {
     type: { type: String, enum: ["Point"], default: "Point" },
-    coordinates: { type: [Number], index: "2dsphere" } // [lng, lat]
+    coordinates: { type: [Number]} // [lng, lat]
   },
 
   avgRating: { type: Number, default: 0 },
@@ -41,4 +41,5 @@ const ServiceProviderProfileSchema = new mongoose.Schema({
 
   createdAt: { type: Date, default: Date.now }
 });
+ServiceProviderProfileSchema.index({ location: "2dsphere" });
 export default mongoose.model("ServiceProviderProfile", ServiceProviderProfileSchema);
