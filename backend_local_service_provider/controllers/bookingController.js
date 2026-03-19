@@ -27,3 +27,35 @@ export const updateBookingStatus = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+/* GET BOOKINGS FOR A CUSTOMER */
+export const getUserBookings = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const bookings = await Booking.find({ customerId: id })
+      .populate("providerId", "-password")
+      .populate("serviceCategory")
+      .sort({ createdAt: -1 }); 
+
+    res.json(bookings);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/* GET BOOKINGS FOR A PROVIDER */
+export const getProviderBookings = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const bookings = await Booking.find({ providerId: id })
+      .populate("customerId", "-password")
+      .populate("serviceCategory")
+      .sort({ createdAt: -1 });
+
+    res.json(bookings);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
